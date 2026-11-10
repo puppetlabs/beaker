@@ -65,13 +65,16 @@ module Windows::Exec
   #
   # @return [Result] result of starting SSH service
   def ssh_service_restart
+    # Cygwin's ssh-host-config names the service cygsshd. Older versions named it sshd.
+    cygsshd = exec(Beaker::Command.new('cygrunsrv -Q cygsshd'), :accept_all_exit_codes => true).exit_code == 0
+    service_name = cygsshd ? 'cygsshd' : 'sshd'
     command_result = nil
     # we get periodic failures to restart the service, so looping these with re-attempts
     repeat_fibonacci_style_for(5) do
-      0 == exec(Beaker::Command.new("cygrunsrv -E sshd"), :acceptable_exit_codes => [0, 1]).exit_code
+      0 == exec(Beaker::Command.new("cygrunsrv -E #{service_name}"), :acceptable_exit_codes => [0, 1]).exit_code
     end
     repeat_fibonacci_style_for(5) do
-      command_result = exec(Beaker::Command.new("cygrunsrv -S sshd"), :acceptable_exit_codes => [0, 1])
+      command_result = exec(Beaker::Command.new("cygrunsrv -S #{service_name}"), :acceptable_exit_codes => [0, 1])
       0 == command_result.exit_code
     end
     command_result
