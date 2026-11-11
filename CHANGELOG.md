@@ -2,9 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [7.8.3](https://github.com/voxpupuli/beaker/tree/7.8.3) (2026-09-17)
+## [7.8.4](https://github.com/voxpupuli/beaker/tree/7.8.4) (2026-11-11)
 
-[Full Changelog](https://github.com/voxpupuli/beaker/compare/v7.8.2...7.8.3)
+[Full Changelog](https://github.com/voxpupuli/beaker/compare/v7.8.3...7.8.4)
+
+**Fixed bugs:**
+
+- Restart Cygwin's sshd under its current service name [\#2059](https://github.com/voxpupuli/beaker/pull/2059) ([nmburgan](https://github.com/nmburgan))
+
+## [v7.8.3](https://github.com/voxpupuli/beaker/tree/v7.8.3) (2026-09-17)
+
+[Full Changelog](https://github.com/voxpupuli/beaker/compare/v7.8.2...v7.8.3)
 
 **Fixed bugs:**
 
