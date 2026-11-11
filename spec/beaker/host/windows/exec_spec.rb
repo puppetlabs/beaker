@@ -78,6 +78,25 @@ module Beaker
       end
     end
 
+    describe '#ssh_service_restart' do
+      let(:success) { double('success', :exit_code => 0) }
+      let(:failure) { double('failure', :exit_code => 1) }
+
+      it 'restarts the cygsshd service when it exists' do
+        allow(instance).to receive(:exec).with(having_attributes(command: 'cygrunsrv -Q cygsshd'), anything).and_return(success)
+        expect(instance).to receive(:exec).with(having_attributes(command: 'cygrunsrv -E cygsshd'), anything).and_return(success)
+        expect(instance).to receive(:exec).with(having_attributes(command: 'cygrunsrv -S cygsshd'), anything).and_return(success)
+        expect(instance.ssh_service_restart).to eq(success)
+      end
+
+      it 'restarts the sshd service when there is no cygsshd service' do
+        allow(instance).to receive(:exec).with(having_attributes(command: 'cygrunsrv -Q cygsshd'), anything).and_return(failure)
+        expect(instance).to receive(:exec).with(having_attributes(command: 'cygrunsrv -E sshd'), anything).and_return(success)
+        expect(instance).to receive(:exec).with(having_attributes(command: 'cygrunsrv -S sshd'), anything).and_return(success)
+        expect(instance.ssh_service_restart).to eq(success)
+      end
+    end
+
     context 'mv' do
       let(:origin)      { '/origin/path/of/content' }
       let(:destination) { '/destination/path/of/content' }
