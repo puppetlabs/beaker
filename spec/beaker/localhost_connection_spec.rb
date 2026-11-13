@@ -49,6 +49,18 @@ module Beaker
         expect(result.stdout).to eq('some input')
       end
 
+      context 'with an ssh env file' do
+        let(:env_file) { Tempfile.new('ssh_env') }
+        let(:options) { { :logger => double('logger').as_null_object, :ssh_env_file => env_file.path } }
+
+        it 'passes its variables to the command' do
+          env_file.write("MY_VAR=a=b\n\nOTHER=c\nOTHER\n")
+          env_file.flush
+          connection.connect
+          expect(connection.execute('printf "$MY_VAR $OTHER"').stdout).to eq('a=b c')
+        end
+      end
+
       it 'sets stdout, stderr and exitcode' do
         allow(Open3).to receive(:capture3).and_return(['stdout', 'stderr', double({ exitstatus: 0 })])
         connection.connect

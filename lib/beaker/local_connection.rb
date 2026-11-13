@@ -39,8 +39,8 @@ module Beaker
       envs = {}
       if File.readable?(@ssh_env_file)
         File.foreach(@ssh_env_file) do |line|
-          key, value = line.split('=')
-          envs[key] = value
+          key, value = line.chomp.split('=', 2)
+          envs[key] = value if value
         end
       end
 
