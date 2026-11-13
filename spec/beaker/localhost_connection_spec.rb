@@ -38,9 +38,15 @@ module Beaker
 
     describe '#execute' do
       it 'calls open3' do
-        expect(Open3).to receive(:capture3).with({}, 'my_command')
+        expect(Open3).to receive(:capture3).with({}, 'my_command', stdin_data: '')
         connection.connect
         expect(connection.execute('my_command')).to be_a Result
+      end
+
+      it 'passes the stdin option to the command' do
+        connection.connect
+        result = connection.execute('cat', stdin: 'some input')
+        expect(result.stdout).to eq('some input')
       end
 
       it 'sets stdout, stderr and exitcode' do
